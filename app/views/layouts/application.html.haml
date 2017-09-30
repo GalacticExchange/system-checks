@@ -1,0 +1,24 @@
+!!! Strict
+%html
+  %head
+    -#= meta_tags
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    = stylesheet_link_tag    "bootstrap4", media: "all"
+    = stylesheet_link_tag    "tpl", media: "all"
+
+    = javascript_include_tag :application
+    = javascript_include_tag :bootstrap4
+
+
+    = csrf_meta_tag
+
+    = yield(:head)
+
+  %body
+    = content_for?(:content) ? yield(:content) : yield
+

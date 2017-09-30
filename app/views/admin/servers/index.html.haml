@@ -1,0 +1,35 @@
+.page-header
+  .row
+    .col-md-7
+      %h1
+        Servers
+
+.filter
+  = inline_filter_form_for(@filter)
+
+.center-block
+  = paginate @items
+%br
+%table.table.table-striped.table-bordered.table-hover
+  %tr
+    %th= link_to_sortable_column :id, '#'
+    %th Status
+    %th Name
+    %th Commands
+
+  - @items.each do |item|
+    %tr
+      %td= item.id
+      %td
+      -#= render "statuses", item: item
+      %td
+        = link_to "#{item.name}", admin_server_path(:id => item.id)
+      %td
+        =link_to checks_path(:server_id=>item.id) do
+          Check
+
+= paginate @items
+
+
+
+

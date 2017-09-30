@@ -1,0 +1,44 @@
+// bootstrap 4
+@import "bootstrap4";
+@import "optimacms/colors";
+@import "optimacms/tpl";
+@import "optimacms/skins/noskin";
+@import "admin_tpl";
+
+
+// bootstrap 3
+//@import "bootstrap3";
+
+//@import "tpl";
+//@import "optimacms/skins/noskin";
+//@import "admin_tpl";
+
+
+// v2
+//@import "font-awesome";
+
+//@import "bootstrap_variables";
+//@import "bootstrap_custom";
+//@import "bootstrap_and_overrides";
+
+//@import "colors";
+//@import "tpl";
+//@import "optimacms/skins/noskin";
+
+
+/*
+code, pre{
+  border:1px #333333 dotted;
+  background-color: #e4edf4;
+  color: #134161;
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+  margin-left: -30px;
+}
+*/
+
+
+// OLD from optimacms
+//@import "optimacms/admin";
+//@import "optimacms/admin_tpl";

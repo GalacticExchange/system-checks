@@ -1,0 +1,8 @@
+Select server and check set
+
+= horizontal_simple_form_for(:check, url: admin_runner_path, html: { method: :get}) do |f|
+  = f.input :server_id, collection: Server.all, value_method: :id
+  = f.input :checkset_id, collection: Checkset.all, value_method: :id
+
+  = f.submit 'Submit', class: 'btn btn-primary'
+

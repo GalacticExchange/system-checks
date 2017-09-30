@@ -1,0 +1,31 @@
+//== Colors
+
+$col-gray: #687074; // main color
+$col-green: #51d466; // 72c02c
+$col-blue: #009FDB; // main blue
+
+$col-blue2: #0093F0; // link
+$col-blue3: #0093f0; // link-hover
+
+$gray-darker:            lighten(#000, 13.5%); // #222
+$gray-dark:              #7b8a8b;   // #333
+$gray-dark-middle:              #666;   // #666
+$gray:                   #95a5a6; // #555
+$gray-light:             #b4bcc2;   // #999
+$gray-lighter:           #ecf0f1; // #eee
+
+
+// scheme 1 - green
+$col-primary: $col-green;
+$col-second: $col-blue;
+
+// scheme 2 - blue
+//$col-primary: $col-blue;
+//$col-second: $col-green;
+
+//
+$brand-primary:         $col-gray;
+$brand-success:         $col-green;
+$brand-info:            $col-blue;
+$brand-warning:         #F39C12;
+$brand-danger:          #E74C3C;

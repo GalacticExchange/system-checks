@@ -1,0 +1,170 @@
+=link_to 'Select check', select_checks_path
+
+%h2 Server #{@server.title}
+Server data:
+=simple_form_for @server, :url=>checks_url, method: :get, html: {id: 'form_server'} do |f|
+  =f.input :opts_data, as: :text, label: false, :input_html => { :value => @server.opts_data}
+
+Check set:
+%b
+  #{@checkset.title}
+=link_to 'Edit checks in set', edit_admin_checkset_path(@checkset)
+%br
+%br
+
+
+%b Check:
+=simple_form_for :check, :url=>admin_runner_update_check_server_url, method: :put, html: {id: 'form_check_data'} do |f|
+  =f.input :server_id, as: :hidden, :input_html => { :value => @server.id }
+  =f.input :checkset_id, collection: @sets_all, value_method: :id, label: false, selected: @set_id , input_html: {id: 'f_checkset_id'}
+  =f.input :extra_opts, as: :text, label: 'Extra vars', :input_html => { :value => @extra_opts}
+  =f.submit 'Submit', :id=>'btn_check_save', :class=>'btn btn-success btn-sm'
+%br
+%br
+=link_to 'Refresh', '#', :id=>'btn_refresh_all', :class=>'btn btn-primary'
+%br
+%br
+#list_checks_results
+  - @checks.each do |r|
+    - check_info = r
+    - name = check_info.name
+
+    .card{id: 'check_'+r.id.to_s, data: {id: r.id}}
+      -#.card-block
+      -#%h3.card-title
+          =check_info.title
+      -#%p.card-text
+          -check_info.opts.each do |k, v|
+            #{k}: #{v}
+
+
+      %ul.list-group.list-group-flush
+        %li.status.list-group-item
+          .pull-left
+            %b=check_info.title || check_info.type_name
+          .pull-right
+            %span.res
+          .clearfix
+
+        %li.commands.list-group-item
+          %ul.list-inline
+            %li
+              =link_to 'Refresh', '#', class: "card-link btn-refresh-check", data: {id: r.id}
+            %li
+              <a href="#" class="card-link">Hide</a>
+            %li(style="margin-right:20px;")
+              =simple_form_for :checkupdate, :url=>checks_url, method: :post, html: {class: 'form-inline form_autoupdate', style: 'width:100px;'} do |f|
+                =f.input :checkset_id, collection: [['Update: Never',0], ['5 sec', 5], ['10 sec', 10], ['1 min', 60]], label: false, selected: 0, input_html: {class: 'input-sm', id: 'f_check_autoupdate_'+r.id.to_s}
+            %li
+              =link_to 'Output', '#', class: "card-link btn-toggle-output", data: {id: r.id}
+            %li
+              %span.status_updating(style="display:none;")
+                Updating..
+
+        %li.opts.list-group-item
+          = check_info.opts_data
+          - if check_info.server.present?
+            , server: #{check_info.server}
+
+        %li.output.list-group-item(style="display:none;")
+          %textarea(style="width:80%; height: 80px; color: #000000;")
+          -#=r[:output]
+          %div.logs
+
+
+
+:javascript
+
+  jQuery(function($) {
+    $("#btn_refresh_all").click(function() {
+      update_all();
+      return false;
+    });
+
+    $("#list_checks_results .btn-refresh-check").click(function() {
+      var id = $(this).data('id');
+      update_check(id);
+      return false;
+    });
+
+    $('#f_checkset_id').on('change', function() {
+      load_checks_for_set(this.value); // or $(this).val()
+    });
+
+    $("#list_checks_results .btn-toggle-output").click(function() {
+      toggle_output($(this).data('id'));
+      return false;
+    });
+
+
+
+
+    update_all();
+  });
+
+
+  function update_all(){
+    $('#list_checks_results > .card').each(function( index ) {
+      update_check($(this).data('id'));
+    });
+
+  }
+
+  function update_check(id){
+    var obj = $('#check_'+id);
+
+    obj.find('span.status_updating').show();
+    obj.find('.output textarea').val('updating...');
+
+    $.ajax({
+      url: "/admin/runner/get_info?server_id=#{@server.id}&check_id="+obj.data('id'),
+      type: "GET",
+      dataType: "json",
+      contentType: "application/json",
+      success: function(data){
+        show_check_result(obj, data);
+      },
+      complete: function (data) {
+        // Schedule the next
+        //setTimeout(update_data, interval);
+
+        obj.find('span.status_updating').hide();
+      }
+
+    });
+  }
+
+  function show_check_result(obj, data){
+    var id = obj.data('id');
+    status = data.status;
+
+    // status
+    t_status = obj.find('li.status');
+    t_status.find('span.res').html(status);
+
+    // output
+    t = obj.find('li.output');
+    t.find('textarea').val(data.output);
+
+    t.find('.logs').html(data.logs);
+
+    // styles
+    t_status.removeClass(function (index, css) {
+      return (css.match (/list-group-item-\w+$/i) || []).join(' ');
+    });
+
+    t_status.addClass('list-group-item-'+status);
+
+  }
+
+  function load_checks_for_set(set_id){
+    $('#form_checkset').submit();
+  }
+
+  function toggle_output(id){
+    var obj = $('#check_'+id);
+
+    // output
+    t = obj.find('li.output');
+    t.toggle();
+  }

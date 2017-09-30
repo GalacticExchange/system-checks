@@ -1,0 +1,7 @@
+.nested-fields
+  %hr
+  = f.input :title
+  = f.input :type_name
+  = f.input :server, hint: 'leave blank if run on this server'
+  = f.input :opts_data, as: :text
+  = link_to_remove_association "remove", f

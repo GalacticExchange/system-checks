@@ -1,0 +1,15 @@
+= simple_form_for([:admin, @item], html: { class: 'form-horizontal' }) do |f|
+  = f.error_notification
+
+  -#= f.input :name, :hint => "English letters only", :input_html => { :class => "form-control" }
+  = f.input :title, :input_html => { :class => "form-control" }
+
+  %h3 Checks
+  #tasks
+    = f.simple_fields_for :check_in_sets, html: { class: 'form-horizontal' } do |check|
+      = render 'check_in_set_fields', f: check
+    .links
+      = link_to_add_association 'add', f, :check_in_sets
+
+
+  = f.submit 'Save', class: 'btn btn-primary btn-lg'

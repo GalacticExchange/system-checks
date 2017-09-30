@@ -1,0 +1,31 @@
+.page-header
+  .row
+    .col-md-7
+      %h1 Check sets
+
+.filter
+  = inline_filter_form_for(@filter)
+
+.center-block
+  = paginate @items
+%br
+%table.table.table-striped.table-bordered.table-hover
+  %tr
+    %th= link_to_sortable_column :id, '#'
+    %th Status
+    %th Name
+    %th Commands
+
+  - @items.each do |item|
+    %tr
+      %td= item.id
+      %td
+      -#= render "statuses", item: item
+      %td
+        = link_to item.title, edit_admin_checkset_path(item)
+      %td
+        =link_to edit_admin_checkset_path(item) do
+          Edit
+
+= paginate @items
+
